@@ -1,0 +1,106 @@
+---
+title: "Eluvio Report"
+author: "Hao Tong"
+date: "2021/4/19"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Modeling
+```{r load data, echo=FALSE}
+# Load data
+df = read.csv('df_years.csv')
+```
+(Our data is already processed and cleaned.)
+\newline
+\newline
+Our purpose is to tell if `years` has played an important role in the relationship between `up_votes` and `country`. So, we deployed two regression models and use anova to compare the fit between the models.
+
+```{r model comparison, echo=TRUE}
+# model1 without `year`, model2 with `year`
+model1 = lm(up_votes~label,data = df)
+model2 = lm(up_votes~label+years, data = df)
+
+anova(model1,model2)
+```
+
+
+Our assumption assumes there's no effect of `years`, but we get a p-value far less than 0.001, indicating adding `years` did improve the performance,so we reject the null hypothesis. `years` does have a significant effect.
+
+\pagebreak
+
+
+## Plotting and Analysis
+
+
+Now, let's draw some plots for a better look at the pattern and relationship.
+Since the date started from 2008-01-25, we drew the plot for `year` 2008 first.
+
+```{r fig1, fig.height = 3.5, fig.width = 10, fig.align='center', echo=FALSE}
+# Frequencey table first
+barplot(table(df[df['years']==2008,2]), main = 'Barplot for up_votes in 2008')
+```
+
+
+Then, we drew a strip plot for `year` 2008.
+
+```{r fig2, fig.height = 5, fig.width = 10, fig.align='center', echo=FALSE}
+# Draw strip plot
+df_2008 = df[df['years']==2008,]
+
+stripchart(
+up_votes~label,
+data = df_2008,
+col = c('red','blue','red','blue','red','blue','red','blue','red','blue'),
+main = 'Strip Plot for year 2008',
+vertical = TRUE,
+pch = 16
+)
+```
+
+From the plots above, we can see that although Israel didn't have the most articles (only about 4th among these countries), but `up_votes` are quite high overall. The reasons are probably the good strategies and policies by Israel government of making friends and promote cooperation globally to contribute to globalization. In contrast, China has a high frequency (rank 2nd, only less than US), but hasn't got higher `up_votes` than other countries. This was probably because the Chinese government has faced a hard time in 2008 dealing with Sichuan earthquake and hosting Beijing Olympics.
+
+\pagebreak
+
+Now, we take another look at `year` 2016, which is the last year in our dataset.
+
+
+```{r fig3, fig.height = 3.5, fig.width = 10, fig.align='center', echo=FALSE}
+# Frequencey table first
+barplot(table(df[df['years']==2016,2]), main = 'Barplot for up_votes in 2016')
+```
+
+Then, we drew a strip plot for `year` 2016.
+
+```{r fig4, fig.height = 5, fig.width = 10, fig.align='center', echo=FALSE}
+# Draw strip plot
+df_2016 = df[df['years']==2016,]
+
+stripchart(
+up_votes~label,
+data = df_2016,
+col = c('red','blue','red','blue','red','blue','red','blue','red','blue'),
+main = 'Strip Plot for year 2016',
+vertical = TRUE,
+pch = 16
+)
+```
+
+From the plots for `year` 2016, we can see that the frequencies are more variant now, but `up_votes` are more evenly distributed. So from the `up_votes`, we can say the world is more globalised, but from the frequencies, authors still pay more attention to certain countries.
+
+## Weaknesses
+Due to the large dataset, we only extract some information from the raw data. So the analysis is not adequate.
+Besides, the data starts from 2008-01-25 and ends at 2016-11-25. Some data is not recorded for a year, which may lead to errors.
+
+\pagebreak
+
+## Others
+Firstly, I have to apologive for only knowing `nltk` about NLP. There's still a lot to learn, what I did is to give it a best try.
+\newline
+\newline
+I know my work is not perfect, yet I really hope I can get this internship position. I'm sure I can do better and learn more things to help the team and the company.
+\newline
+\newline
+Thank you for your time to review!
